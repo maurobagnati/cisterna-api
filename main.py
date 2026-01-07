@@ -6,7 +6,11 @@ app = FastAPI()
 def obtener_nivel_tanque():
     with sync_playwright() as p:
         # Aquí usamos headless=True porque el servidor no necesita mostrar la ventana
-        browser = p.chromium.launch(headless=True, args=["--no-sandbox", "--disable-setuid-sandbox"])
+        browser = p.chromium.launch(headless=True, args=[
+        "--no-sandbox", 
+        "--disable-setuid-sandbox", 
+        "--disable-dev-shm-usage" # Muy importante para servidores con poca RAM
+    ])
         page = browser.new_page()
         
         # --- TU LÓGICA DE LOGIN ---
@@ -28,4 +32,5 @@ def obtener_nivel_tanque():
 def get_nivel():
     # Esta es la ruta que llamará tu celular
     dato = obtener_nivel_tanque()
+
     return {"nivel": dato, "unidad": "metros", "estado": "ok"}
